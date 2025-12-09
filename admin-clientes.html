@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Clientes - NovaModa Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { display: flex; margin: 0; background: #0a0a0a; font-family: 'Inter', sans-serif; }
+
+    .sidebar {
+      width: 260px;
+      background: #111;
+      height: 100vh;
+      position: fixed;
+      border-right: 1px solid #222;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #14d0d6;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #222;
+    }
+
+    .menu-item {
+      padding: 12px 16px;
+      margin: 8px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #aaa;
+      text-decoration: none;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background: rgba(20, 208, 214, 0.1);
+      color: #14d0d6;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 { font-size: 2rem; margin: 0; color: #fff; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: #111;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid #222;
+    }
+
+    .stat-label {
+      color: #888;
+      font-size: 13px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #14d0d6;
+    }
+
+    .filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 15px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .filter-select {
+      padding: 10px 15px;
+      background: #111;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .table-container {
+      background: #111;
+      border-radius: 12px;
+      border: 1px solid #222;
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid #222;
+    }
+
+    th {
+      background: #0a0a0a;
+      color: #888;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    td {
+      color: #ccc;
+    }
+
+    tr:hover {
+      background: #0a0a0a;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      font-size: 12px;
+    }
+
+    .btn-primary {
+      background: #14d0d6;
+      color: #000;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px;
+      color: #888;
+    }
+
+    @media(max-width: 968px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">👥 NovaModa Admin</div>
+    <a href="admin.html" class="menu-item">
+      <span>📊</span> Dashboard
+    </a>
+    <a href="admin-pedidos.html" class="menu-item">
+      <span>📦</span> Pedidos
+    </a>
+    <a href="admin-produtos.html" class="menu-item">
+      <span>👕</span> Produtos
+    </a>
+    <a href="admin-clientes.html" class="menu-item active">
+      <span>👥</span> Clientes
+    </a>
+    <a href="admin-relatorios.html" class="menu-item">
+      <span>📈</span> Relatórios
+    </a>
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #222;">
+      <a href="index.html" class="menu-item">
+        <span>🏠</span> Voltar ao Site
+      </a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="header">
+      <h1>Gerenciar Clientes</h1>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total de Clientes</div>
+        <div class="stat-value" id="totalClients">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Novos (30 dias)</div>
+        <div class="stat-value" id="newClients">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Gasto</div>
+        <div class="stat-value" id="totalRevenue">R$ 0,00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ticket Médio</div>
+        <div class="stat-value" id="avgTicket">R$ 0,00</div>
+      </div>
+    </div>
+
+    <div class="filters">
+      <div class="search-box">
+        <input type="text" id="searchClients" placeholder="Buscar por nome ou email...">
+      </div>
+      
+      <select class="filter-select" id="sortFilter">
+        <option value="name">Nome A-Z</option>
+        <option value="orders">Mais Pedidos</option>
+        <option value="spent">Maior Gasto</option>
+        <option value="recent">Mais Recente</option>
+      </select>
+    </div>
+
+    <div class="loading" id="loadingState">⏳ Carregando clientes...</div>
+
+    <div class="table-container" id="tableContainer" style="display:none;">
+      <table id="clientsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Telefone</th>
+            <th>Pedidos</th>
+            <th>Total Gasto</th>
+            <th>Cadastro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Carregado via JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    window.API_BASE = window.location.origin + '/Novamoda/api';
+  </script>
+  
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    let clientes = [];
+
+    // ==========================================
+    // CARREGAR CLIENTES DO BANCO DE DADOS
+    // ==========================================
+    async function carregarClientes() {
+      const loading = document.getElementById('loadingState');
+      const table = document.getElementById('tableContainer');
+
+      loading.style.display = 'block';
+      table.style.display = 'none';
+
+      try {
+        console.log('🔗 Buscando clientes da API...');
+        
+        const response = await fetch(`${API_BASE}/admin/clientes.php`);
+        const data = await response.json();
+
+        console.log('📦 Resposta:', data);
+
+        if (data.success && data.data) {
+          clientes = data.data;
+          renderizarClientes();
+          atualizarEstatisticas();
+          
+          loading.style.display = 'none';
+          table.style.display = 'block';
+        } else {
+          throw new Error('Nenhum cliente encontrado');
+        }
+      } catch (error) {
+        console.error('❌ Erro ao carregar clientes:', error);
+        loading.innerHTML = `
+          <div style="color:#ff3b30;">
+            ❌ Erro ao carregar clientes<br>
+            <small>${error.message}</small>
+          </div>
+        `;
+      }
+    }
+
+    // ==========================================
+    // RENDERIZAR CLIENTES
+    // ==========================================
+    function renderizarClientes() {
+      const tbody = document.querySelector('#clientsTable tbody');
+      
+      let filtered = [...clientes];
+
+      // Busca
+      const search = document.getElementById('searchClients').value.toLowerCase();
+      if (search) {
+        filtered = filtered.filter(c => 
+          c.nome.toLowerCase().includes(search) || 
+          c.email.toLowerCase().includes(search)
+        );
+      }
+
+      // Ordenação
+      const sort = document.getElementById('sortFilter').value;
+      if (sort === 'name') {
+        filtered.sort((a, b) => a.nome.localeCompare(b.nome));
+      } else if (sort === 'orders') {
+        filtered.sort((a, b) => b.total_pedidos - a.total_pedidos);
+      } else if (sort === 'spent') {
+        filtered.sort((a, b) => b.total_gasto - a.total_gasto);
+      } else if (sort === 'recent') {
+        filtered.sort((a, b) => new Date(b.data_cadastro) - new Date(a.data_cadastro));
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:#888;">Nenhum cliente encontrado</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(c => {
+        const dataCadastro = new Date(c.data_cadastro).toLocaleDateString('pt-BR');
+        const totalGasto = parseFloat(c.total_gasto || 0);
+        const totalPedidos = parseInt(c.total_pedidos || 0);
+        
+        return `
+          <tr>
+            <td><strong>#${c.id}</strong></td>
+            <td>
+              <div style="font-weight:600;color:#fff;">${c.nome}</div>
+              <div style="font-size:12px;color:#888;">${c.email}</div>
+            </td>
+            <td>${c.telefone || '-'}</td>
+            <td>${totalPedidos}</td>
+            <td><strong style="color:#14d0d6;">R$ ${totalGasto.toFixed(2).replace('.', ',')}</strong></td>
+            <td>${dataCadastro}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ==========================================
+    // ATUALIZAR ESTATÍSTICAS
+    // ==========================================
+    function atualizarEstatisticas() {
+      const totalClientes = clientes.length;
+      
+      // Novos clientes (últimos 30 dias)
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const novosClientes = clientes.filter(c => 
+        new Date(c.data_cadastro) > thirtyDaysAgo
+      ).length;
+
+      // Total gasto
+      const totalGasto = clientes.reduce((sum, c) => sum + parseFloat(c.total_gasto || 0), 0);
+
+      // Ticket médio
+      const clientesComPedidos = clientes.filter(c => c.total_pedidos > 0);
+      const ticketMedio = clientesComPedidos.length > 0 
+        ? totalGasto / clientesComPedidos.length 
+        : 0;
+
+      document.getElementById('totalClients').textContent = totalClientes;
+      document.getElementById('newClients').textContent = novosClientes;
+      document.getElementById('totalRevenue').textContent = `R$ ${totalGasto.toFixed(2).replace('.', ',')}`;
+      document.getElementById('avgTicket').textContent = `R$ ${ticketMedio.toFixed(2).replace('.', ',')}`;
+    }
+
+    // ==========================================
+    // EVENT LISTENERS
+    // ==========================================
+    document.getElementById('searchClients').addEventListener('input', renderizarClientes);
+    document.getElementById('sortFilter').addEventListener('change', renderizarClientes);
+
+    // ==========================================
+    // INICIALIZAR
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', carregarClientes);
+  </script>
+</body>
+</html>

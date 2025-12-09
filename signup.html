@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Conta - NovaModa</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+      padding: 40px 0;
+    }
+
+    .animated-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(20, 208, 214, 0.15), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.15), transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(20, 208, 214, 0.1), transparent 50%);
+      animation: bgPulse 8s ease-in-out infinite;
+    }
+
+    @keyframes bgPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(20, 208, 214, 0.3);
+      border-radius: 50%;
+      animation: float 20s infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% {
+        transform: translateY(-100vh) translateX(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .signup-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 480px;
+      margin: 20px;
+    }
+
+    .signup-card {
+      background: rgba(17, 17, 17, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(20, 208, 214, 0.2);
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 80px rgba(20, 208, 214, 0.1);
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .signup-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .logo-signup {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, #14d0d6, #0ea5e9);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      box-shadow: 0 10px 30px rgba(20, 208, 214, 0.3);
+      animation: logoPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .signup-title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #14d0d6, #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .signup-subtitle {
+      color: #888;
+      font-size: 14px;
+    }
+
+    .signup-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      color: #888;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      transition: color 0.3s;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 14px 18px;
+      padding-left: 48px;
+      background: rgba(11, 11, 11, 0.8);
+      border: 2px solid rgba(51, 51, 51, 0.5);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: #14d0d6;
+      background: rgba(11, 11, 11, 0.95);
+      box-shadow: 0 0 0 4px rgba(20, 208, 214, 0.1);
+    }
+
+    .form-input:focus + .input-icon {
+      color: #14d0d6;
+    }
+
+    .form-group:focus-within .form-label {
+      color: #14d0d6;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 40px;
+      font-size: 19px;
+      color: #666;
+      transition: color 0.3s;
+      pointer-events: none;
+    }
+
+    /* Password strength */
+    .password-strength {
+      height: 4px;
+      background: #222;
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .strength-weak { width: 33%; background: #ff3b30; }
+    .strength-medium { width: 66%; background: #fbbf24; }
+    .strength-strong { width: 100%; background: #4ade80; }
+
+    /* Termos */
+    .terms-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .terms-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #14d0d6;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .terms-group label {
+      color: #aaa;
+      font-size: 13px;
+      line-height: 1.5;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .terms-group a {
+      color: #14d0d6;
+      text-decoration: none;
+    }
+
+    .terms-group a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-signup {
+      width: 100%;
+      padding: 17px;
+      background: linear-gradient(135deg, #14d0d6, #0ea5e9);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 20px rgba(20, 208, 214, 0.3);
+      margin-top: 10px;
+    }
+
+    .btn-signup:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(20, 208, 214, 0.4);
+    }
+
+    .btn-signup:active {
+      transform: translateY(0);
+    }
+
+    .btn-signup:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 25px 0;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(102, 102, 102, 0.3);
+    }
+
+    .social-signup {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px;
+      background: rgba(11, 11, 11, 0.8);
+      border: 1px solid rgba(51, 51, 51, 0.5);
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .social-btn:hover {
+      background: rgba(17, 17, 17, 0.95);
+      border-color: #14d0d6;
+      transform: translateY(-2px);
+    }
+
+    .social-icon {
+      font-size: 19px;
+    }
+
+    .signup-footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #888;
+      font-size: 14px;
+    }
+
+    .signup-footer a {
+      color: #14d0d6;
+      text-decoration: none;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+
+    .signup-footer a:hover {
+      opacity: 0.8;
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: rgba(17, 17, 17, 0.95);
+      border: 1px solid rgba(20, 208, 214, 0.2);
+      border-radius: 12px;
+      color: #14d0d6;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .back-btn:hover {
+      background: rgba(20, 208, 214, 0.1);
+      transform: translateX(-5px);
+    }
+
+    .btn-signup.loading {
+      position: relative;
+      color: transparent;
+      pointer-events: none;
+    }
+
+    .btn-signup.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(0, 0, 0, 0.3);
+      border-top-color: #000;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      top: 50%;
+      left: 50%;
+      margin: -10px 0 0 -10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 520px) {
+      .signup-card {
+        padding: 32px 24px;
+      }
+
+      .signup-title {
+        font-size: 1.6rem;
+      }
+
+      .back-btn {
+        top: 15px;
+        left: 15px;
+        padding: 10px 16px;
+      }
+
+      .social-signup {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="animated-bg"></div>
+  <div class="particles" id="particles"></div>
+
+  <a href="index.html" class="back-btn">
+    <span>←</span>
+    <span>Voltar ao site</span>
+  </a>
+
+  <div class="signup-container">
+    <div class="signup-card">
+      <div class="signup-header">
+        <div class="logo-signup">✨</div>
+        <h1 class="signup-title">Crie sua conta</h1>
+        <p class="signup-subtitle">Junte-se à comunidade NovaModa</p>
+      </div>
+
+      <form class="signup-form" id="signupForm" name="signup">
+        <div class="form-group">
+          <label class="form-label">Nome Completo *</label>
+          <input 
+            type="text" 
+            class="form-input" 
+            id="signupName" 
+            name="name"
+            placeholder="Seu nome"
+            required
+            autocomplete="name"
+          >
+          <span class="input-icon">👤</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input 
+            type="email" 
+            class="form-input" 
+            id="signupEmail" 
+            name="email"
+            placeholder="seu@email.com"
+            required
+            autocomplete="email"
+          >
+          <span class="input-icon">📧</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Senha *</label>
+          <input 
+            type="password" 
+            class="form-input" 
+            id="signupPassword" 
+            name="password"
+            placeholder="••••••••"
+            required
+            autocomplete="new-password"
+          >
+          <span class="input-icon">🔒</span>
+          <div class="password-strength">
+            <div class="password-strength-bar" id="strengthBar"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirmar Senha *</label>
+          <input 
+            type="password" 
+            class="form-input" 
+            id="signupPasswordConfirm" 
+            name="passwordConfirm"
+            placeholder="••••••••"
+            required
+            autocomplete="new-password"
+          >
+          <span class="input-icon">✓</span>
+        </div>
+
+        <div class="terms-group">
+          <input type="checkbox" id="acceptTerms" required>
+          <label for="acceptTerms">
+            Eu aceito os <a href="#">Termos de Uso</a> e a <a href="#">Política de Privacidade</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-signup" id="signupBtn">
+          Criar Conta
+        </button>
+      </form>
+
+      <div class="divider">ou cadastre-se com</div>
+
+      <div class="social-signup">
+        <button type="button" class="social-btn" onclick="signupWithGoogle()">
+          <span class="social-icon">🔵</span>
+          <span>Google</span>
+        </button>
+        <button type="button" class="social-btn" onclick="signupWithFacebook()">
+          <span class="social-icon">📘</span>
+          <span>Facebook</span>
+        </button>
+      </div>
+
+      <div class="signup-footer">
+        Já tem uma conta? <a href="login.html">Fazer login</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDEM CORRETA: API_BASE → storage → auth -->
+  <script>
+    // Definir API_BASE globalmente ANTES de carregar os outros scripts
+    window.API_BASE = window.location.origin + '/Novamoda/api';
+    console.log('🔗 API_BASE configurado:', window.API_BASE);
+  </script>
+  
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    // ✅ O auth.js já gerencia o formulário automaticamente!
+    
+    // Criar partículas
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const particleCount = 30;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+        container.appendChild(particle);
+      }
+    }
+
+    createParticles();
+
+    // Password strength checker
+    document.getElementById('signupPassword').addEventListener('input', (e) => {
+      const password = e.target.value;
+      const strengthBar = document.getElementById('strengthBar');
+      
+      let strength = 0;
+      if (password.length >= 6) strength++;
+      if (password.length >= 10) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+      strengthBar.className = 'password-strength-bar';
+      if (strength >= 4) strengthBar.classList.add('strength-strong');
+      else if (strength >= 2) strengthBar.classList.add('strength-medium');
+      else if (strength >= 1) strengthBar.classList.add('strength-weak');
+    });
+
+    // Social signup
+    function signupWithGoogle() {
+      alert('🔵 Cadastro com Google - Integração em desenvolvimento');
+    }
+
+    function signupWithFacebook() {
+      alert('📘 Cadastro com Facebook - Integração em desenvolvimento');
+    }
+
+    // Auto-focus
+    document.getElementById('signupName').focus();
+
+    console.log('✅ Página de signup carregada');
+    console.log('🔐 Auth system:', window.auth ? 'Carregado' : 'Erro');
+    console.log('💾 Storage system:', window.storage ? 'Carregado' : 'Erro');
+  </script>
+</body>
+</html>

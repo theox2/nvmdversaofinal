@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - NovaModa</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { display: flex; margin: 0; background: #0a0a0a; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: #111;
+      height: 100vh;
+      position: fixed;
+      border-right: 1px solid #222;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #14d0d6;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #222;
+    }
+
+    .menu-item {
+      padding: 12px 16px;
+      margin: 8px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #aaa;
+      text-decoration: none;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background: rgba(20, 208, 214, 0.1);
+      color: #14d0d6;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 { font-size: 2rem; margin: 0; }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #111;
+      padding: 10px 16px;
+      border-radius: 8px;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: #111;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid #222;
+      transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: #14d0d6;
+    }
+
+    .stat-label {
+      color: #888;
+      font-size: 14px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #14d0d6;
+    }
+
+    .stat-change {
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .positive { color: #4ade80; }
+    .negative { color: #ff3b30; }
+
+    /* Section */
+    .section {
+      background: #111;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid #222;
+      margin-bottom: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background: #14d0d6;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(20, 208, 214, 0.4);
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #222;
+    }
+
+    th {
+      color: #888;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    td { color: #ccc; }
+
+    .status {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-pending { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .status-shipped { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    .status-delivered { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
+    .status-cancelled { background: rgba(255, 59, 48, 0.2); color: #ff3b30; }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .action-card {
+      background: #161616;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid #222;
+    }
+
+    .action-card:hover {
+      background: #1a1a1a;
+      border-color: #14d0d6;
+      transform: translateY(-2px);
+    }
+
+    .action-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    /* Chart placeholder */
+    .chart-placeholder {
+      height: 300px;
+      background: #0a0a0a;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">🛒 NovaModa Admin</div>
+    <a href="admin.html" class="menu-item active">
+      <span>📊</span> Dashboard
+    </a>
+    <a href="admin-pedidos.html" class="menu-item" >
+      <span>📦</span> Pedidos
+    </a>
+    <a href="admin-produtos.html" class="menu-item">
+      <span>👕</span> Produtos
+    </a>
+    <a href="admin-clientes.html" class="menu-item">
+      <span>👥</span> Clientes
+    </a>
+    <a href="admin-relatorios.html" class="menu-item">
+      <span>📈</span> Relatórios
+    </a>
+    <a href="admin-configuração.html" class="menu-item" >
+      <span>⚙️</span> Configurações
+    </a>
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #222;">
+      <a href="index.html" class="menu-item">
+        <span>🏠</span> Voltar ao Site
+      </a>
+      <a href="login.html" class="menu-item">
+        <span>🚪</span> Sair
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header">
+      <h1>Dashboard</h1>
+      <div class="user-info">
+        <span>👤</span>
+        <div>
+          <div style="font-weight: 600;">Admin</div>
+          <div style="font-size: 12px; color: #888;">admin@novamoda.com</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Vendas Hoje</div>
+        <div class="stat-value" id="vendasHoje">R$ 3.247</div>
+        <div class="stat-change positive">↑ 12% vs ontem</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pedidos</div>
+        <div class="stat-value" id="totalPedidos">47</div>
+        <div class="stat-change positive">↑ 8% vs ontem</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Novos Clientes</div>
+        <div class="stat-value">12</div>
+        <div class="stat-change positive">↑ 5% vs ontem</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Taxa de Conversão</div>
+        <div class="stat-value">3.2%</div>
+        <div class="stat-change negative">↓ 0.4% vs ontem</div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Vendas dos Últimos 7 Dias</div>
+      </div>
+      <div class="chart-placeholder">
+        📊 Adicione Chart.js aqui para gráficos reais
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">Pedidos Recentes</div>
+        <button class="btn" onclick="alert('Ver todos os pedidos')">Ver Todos</button>
+      </div>
+      <table id="ordersTable">
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Cliente</th>
+            <th>Produtos</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Preenchido via JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section">
+      <div class="section-title" style="margin-bottom: 20px;">Ações Rápidas</div>
+      <div class="quick-actions">
+        <div class="action-card" onclick="addProduct()">
+          <div class="action-icon">➕</div>
+          <div>Adicionar Produto</div>
+        </div>
+        <div class="action-card" onclick="createCoupon()">
+          <div class="action-icon">🎟️</div>
+          <div>Criar Cupom</div>
+        </div>
+        <div class="action-card" onclick="manageStock()">
+          <div class="action-icon">📦</div>
+          <div>Gerenciar Estoque</div>
+        </div>
+        <div class="action-card" onclick="exportReport()">
+          <div class="action-icon">📊</div>
+          <div>Exportar Relatório</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts - ORDEM CORRETA -->
+  <script src="js/admin-api.js"></script>
+
+  <script>
+    // ==========================================
+    // CARREGAR PEDIDOS FAKE SE NECESSÁRIO
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Aguardar adminAPI carregar
+      await new Promise(resolve => {
+        if (window.adminAPI) {
+          resolve();
+        } else {
+          const interval = setInterval(() => {
+            if (window.adminAPI) {
+              clearInterval(interval);
+              resolve();
+            }
+          }, 100);
+        }
+      });
+
+      console.log('✅ AdminAPI carregado');
+
+      // Carregar pedidos (se existir a tabela)
+      const tbody = document.querySelector('#ordersTable tbody');
+      if (tbody) {
+        try {
+          await window.adminAPI.renderPedidosAdmin();
+        } catch (error) {
+          console.error('Erro ao carregar pedidos:', error);
+          
+          // Fallback: mostrar mensagem amigável
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" style="text-align:center;padding:40px;color:#fbbf24;">
+                ⚠️ Nenhum pedido registrado ainda<br>
+                <small style="color:#666;">Os pedidos aparecerão aqui quando clientes finalizarem compras</small>
+              </td>
+            </tr>
+          `;
+        }
+      }
+    });
+
+    // Simular dados em tempo real (atualizar a cada 5 segundos)
+    setInterval(() => {
+      const vendasEl = document.getElementById('vendasHoje');
+      if (!vendasEl) return;
+      
+      const valorAtual = parseFloat(vendasEl.textContent.replace('R$ ', '').replace('.', '').replace(',', '.'));
+      const novoValor = valorAtual + (Math.random() * 50);
+      vendasEl.textContent = 'R$ ' + novoValor.toFixed(2).replace('.', ',');
+    }, 5000);
+
+    // ==========================================
+    // AÇÕES RÁPIDAS
+    // ==========================================
+    function addProduct() {
+      window.location.href = 'admin-produtos.html';
+    }
+
+    function createCoupon() {
+      alert('🎟️ Criar Cupom\n\nCampos:\n- Código (ex: NATAL10)\n- Tipo: Percentual ou Fixo\n- Valor\n- Validade\n\nEm breve: formulário completo!');
+    }
+
+    function manageStock() {
+      window.location.href = 'admin-produtos.html';
+    }
+
+    function exportReport() {
+      if (!window.adminAPI) {
+        alert('❌ Sistema ainda carregando, aguarde...');
+        return;
+      }
+
+      // Simular exportação
+      const csv = 'Relatório,Valor\nVendas Hoje,R$ 3247.00\nPedidos,47\n';
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'relatorio-novamoda.csv';
+      a.click();
+      
+      alert('✅ Relatório exportado com sucesso!');
+    }
+
+    function viewOrder(orderNumber) {
+      alert(`📦 Ver detalhes do pedido ${orderNumber}\n\nAqui você mostraria:\n- Lista de produtos\n- Dados do cliente\n- Endereço de entrega\n- Status e rastreamento\n\nEm breve: modal completo!`);
+    }
+  </script>
+</body>
+</html>
+```
+</body>
+</html>

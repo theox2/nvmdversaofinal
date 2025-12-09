@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Carrinho – NovaModa</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .container-cart {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 20px 60px;
+    }
+
+    .page-header-cart {
+      margin-bottom: 40px;
+    }
+
+    .page-title-cart {
+      font-size: 2.5rem;
+      color: #fff;
+      margin: 0 0 10px 0;
+      font-weight: 800;
+    }
+
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 30px;
+      align-items: start;
+    }
+
+    /* Lista de itens */
+    .cart-items {
+      background: #111;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #222;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid #222;
+      align-items: center;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .cart-item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .3s;
+    }
+
+    .cart-item-img:hover img {
+      transform: scale(1.05);
+    }
+
+    .cart-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cart-item-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .cart-item-name:hover {
+      color: #14d0d6;
+    }
+
+    .cart-item-details {
+      font-size: 14px;
+      color: #888;
+    }
+
+    .cart-item-price {
+      font-size: 20px;
+      color: #14d0d6;
+      font-weight: 800;
+    }
+
+    .cart-item-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: flex-end;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #0b0b0b;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+
+    .qty-btn {
+      background: transparent;
+      border: none;
+      color: #14d0d6;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0 8px;
+      transition: transform .2s;
+    }
+
+    .qty-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .qty-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .qty-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .remove-btn {
+      background: transparent;
+      border: none;
+      color: #ff3b30;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .remove-btn:hover {
+      color: #ff6b60;
+    }
+
+    /* Resumo */
+    .cart-summary {
+      background: #111;
+      border-radius: 12px;
+      padding: 25px;
+      border: 1px solid #222;
+      position: sticky;
+      top: 120px;
+    }
+
+    .summary-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #222;
+      font-size: 15px;
+    }
+
+    .summary-row:last-of-type {
+      border-bottom: 2px solid #333;
+      margin-bottom: 15px;
+    }
+
+    .summary-label {
+      color: #aaa;
+    }
+
+    .summary-value {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 24px;
+      font-weight: 800;
+      margin: 20px 0;
+    }
+
+    .summary-total .label {
+      color: #fff;
+    }
+
+    .summary-total .value {
+      color: #14d0d6;
+    }
+
+    .coupon-section {
+      margin: 20px 0;
+    }
+
+    .coupon-input-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .coupon-input {
+      flex: 1;
+      padding: 12px;
+      background: #0b0b0b;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .coupon-input:focus {
+      outline: none;
+      border-color: #14d0d6;
+    }
+
+    .coupon-btn {
+      padding: 12px 20px;
+      background: #0b0b0b;
+      border: 1px solid #14d0d6;
+      color: #14d0d6;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all .2s;
+    }
+
+    .coupon-btn:hover {
+      background: #14d0d6;
+      color: #000;
+    }
+
+    .coupon-applied {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(20, 208, 214, 0.1);
+      border: 1px solid #14d0d6;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #14d0d6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .remove-coupon {
+      background: transparent;
+      border: none;
+      color: #ff3b30;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 16px;
+      background: #14d0d6;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .checkout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(20, 208, 214, 0.4);
+    }
+
+    .continue-shopping {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .continue-shopping:hover {
+      color: #14d0d6;
+    }
+
+    /* Empty cart */
+    .empty-cart {
+      text-align: center;
+      padding: 80px 20px;
+      background: #111;
+      border-radius: 12px;
+      border: 1px solid #222;
+    }
+
+    .empty-cart-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+    }
+
+    .empty-cart h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    .empty-cart p {
+      color: #888;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .btn.primary {
+      display: inline-block;
+      padding: 14px 32px;
+      background: #14d0d6;
+      color: #000;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(20, 208, 214, 0.4);
+    }
+
+    /* Responsive */
+    @media(max-width: 968px) {
+      .cart-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .cart-summary {
+        position: static;
+      }
+
+      .cart-item {
+        grid-template-columns: 90px 1fr;
+        gap: 15px;
+      }
+
+      .cart-item-actions {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .cart-item-img {
+        width: 90px;
+        height: 90px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo-area" onclick="location.href='index.html'">
+        <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" class="logo" alt="NovaModa">
+        <span class="brand">NovaModa</span>
+      </div>
+      
+      <div class="right-area">
+        <a class="btn entrar-btn" href="login.html">Entrar</a>
+        <div class="icons">
+          <span class="icon" onclick="location.href='favoritos.html'">♥</span>
+          <span class="icon" onclick="location.href='carrinho.html'">🛒<span class="cart-count">0</span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container-cart">
+    <div class="page-header-cart">
+      <h1 class="page-title-cart">🛒 Seu Carrinho</h1>
+    </div>
+
+    <!-- Empty Cart -->
+    <div class="empty-cart" id="emptyCart" style="display:none">
+      <div class="empty-cart-icon">🛍️</div>
+      <h2>Seu carrinho está vazio</h2>
+      <p>Adicione produtos incríveis e volte aqui para finalizar sua compra!</p>
+      <a href="categorias.html" class="btn primary">Explorar Produtos</a>
+    </div>
+
+    <!-- Cart Layout -->
+    <div class="cart-layout" id="cartLayout">
+      <!-- Items -->
+      <div class="cart-items" id="cartItemsList">
+        <!-- Itens inseridos via JS -->
+      </div>
+
+      <!-- Summary -->
+      <div class="cart-summary">
+        <h3 class="summary-title">Resumo do Pedido</h3>
+        
+        <div class="summary-row">
+          <span class="summary-label">Subtotal (<span id="itemCount">0</span> itens)</span>
+          <span class="summary-value" id="subtotal">R$ 0,00</span>
+        </div>
+        
+        <div class="summary-row">
+          <span class="summary-label">Frete</span>
+          <span class="summary-value" id="shipping">Grátis</span>
+        </div>
+        
+        <div class="summary-row" id="discountRow" style="display:none">
+          <span class="summary-label">Desconto</span>
+          <span class="summary-value" style="color:#4ade80" id="discount">- R$ 0,00</span>
+        </div>
+
+        <div class="summary-total">
+          <span class="label">Total</span>
+          <span class="value" id="total">R$ 0,00</span>
+        </div>
+
+        <!-- Cupom -->
+        <div class="coupon-section">
+          <div class="coupon-input-group">
+            <input type="text" class="coupon-input" id="couponInput" placeholder="Código do cupom">
+            <button class="coupon-btn" id="applyCoupon">Aplicar</button>
+          </div>
+          <div class="coupon-applied" id="couponApplied" style="display:none">
+            <span>✓ Cupom <strong id="couponCode"></strong> aplicado</span>
+            <button class="remove-coupon" id="removeCoupon">×</button>
+          </div>
+        </div>
+
+        <button class="checkout-btn" id="checkoutBtn">Finalizar Compra</button>
+        <a href="categorias.html" class="continue-shopping">← Continuar Comprando</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCRIPTS -->
+  <script>
+    window.API_BASE = window.location.origin + '/Novamoda/api';
+  </script>
+  
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Cupons válidos
+    const cuponsValidos = {
+      'NOVA10': { desconto: 0.10, tipo: 'percentual' },
+      'PRIMEIRA': { desconto: 0.15, tipo: 'percentual' },
+      'FRETE50': { desconto: 50, tipo: 'fixo' }
+    };
+
+    let cupomAplicado = null;
+
+    // ==========================================
+    // RENDERIZAR CARRINHO
+    // ==========================================
+    async function renderCart() {
+      console.log('🛒 Renderizando carrinho...');
+      
+      // Verificar se storage está carregado
+      if (typeof storage === 'undefined') {
+        console.error('❌ Storage não carregado');
+        setTimeout(renderCart, 500);
+        return;
+      }
+
+      // Verificar se usuário está logado
+      if (!storage.isLoggedIn()) {
+        console.warn('⚠️ Usuário não logado');
+        document.getElementById('emptyCart').innerHTML = `
+          <div class="empty-cart-icon">🔒</div>
+          <h2>Faça login para ver seu carrinho</h2>
+          <p>Entre na sua conta para gerenciar seus produtos</p>
+          <a href="login.html" class="btn primary">Fazer Login</a>
+        `;
+        document.getElementById('cartLayout').style.display = 'none';
+        document.getElementById('emptyCart').style.display = 'block';
+        return;
+      }
+
+      // Recarregar carrinho do servidor
+      await storage.loadCartFromServer();
+      
+      const cart = storage.getCart();
+      console.log('📦 Itens no carrinho:', cart);
+      
+      const cartList = document.getElementById('cartItemsList');
+      const emptyCart = document.getElementById('emptyCart');
+      const cartLayout = document.getElementById('cartLayout');
+
+      if (!cart || cart.length === 0) {
+        cartLayout.style.display = 'none';
+        emptyCart.style.display = 'block';
+        emptyCart.innerHTML = `
+          <div class="empty-cart-icon">🛍️</div>
+          <h2>Seu carrinho está vazio</h2>
+          <p>Adicione produtos incríveis e volte aqui para finalizar sua compra!</p>
+          <a href="categorias.html" class="btn primary">Explorar Produtos</a>
+        `;
+        return;
+      }
+
+      cartLayout.style.display = 'grid';
+      emptyCart.style.display = 'none';
+
+      cartList.innerHTML = cart.map(item => {
+        return `
+          <div class="cart-item">
+            <div class="cart-item-img" onclick="location.href='produto.html?id=${item.id}'">
+              <img src="${item.img}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/120'">
+            </div>
+            <div class="cart-item-info">
+              <div class="cart-item-name" onclick="location.href='produto.html?id=${item.id}'">${item.name}</div>
+              <div class="cart-item-details">
+                ${item.size ? `Tamanho: ${item.size}` : ''} 
+                ${item.color ? ` • Cor: ${item.color}` : ''}
+              </div>
+              <div class="cart-item-price">R$ ${item.price.toFixed(2).replace('.',',')}</div>
+            </div>
+            <div class="cart-item-actions">
+              <div class="qty-control">
+                <button class="qty-btn" onclick="updateQty(${item.id}, -1)" ${item.qty <= 1 ? 'disabled' : ''}>−</button>
+                <span class="qty-value">${item.qty}</span>
+                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+              </div>
+              <button class="remove-btn" onclick="removeItem(${item.id})">Remover</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      updateSummary();
+    }
+
+    // ==========================================
+    // ATUALIZAR QUANTIDADE
+    // ==========================================
+    async function updateQty(id, delta) {
+      if (typeof storage === 'undefined') return;
+      
+      console.log(`🔄 Atualizando quantidade do produto ${id}`);
+      const success = await storage.updateCartQty(id, delta);
+      
+      if (success) {
+        await renderCart();
+      }
+    }
+
+    // ==========================================
+    // REMOVER ITEM
+    // ==========================================
+    async function removeItem(id) {
+      if (typeof storage === 'undefined') return;
+      
+      if (confirm('Deseja remover este item do carrinho?')) {
+        console.log(`🗑️ Removendo produto ${id}`);
+        const success = await storage.removeFromCart(id);
+        
+        if (success) {
+          await renderCart();
+          if (storage.showToast) {
+            storage.showToast('Item removido', 'info');
+          }
+        }
+      }
+    }
+
+    // ==========================================
+    // ATUALIZAR RESUMO
+    // ==========================================
+    function updateSummary() {
+      if (typeof storage === 'undefined') return;
+
+      const cart = storage.getCart();
+      const itemCount = cart.reduce((sum, i) => sum + i.qty, 0);
+      const subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+      let desconto = 0;
+      if (cupomAplicado) {
+        if (cupomAplicado.tipo === 'percentual') {
+          desconto = subtotal * cupomAplicado.desconto;
+        } else {
+          desconto = cupomAplicado.desconto;
+        }
+      }
+
+      const frete = 0;
+      const total = subtotal - desconto + frete;
+
+      document.getElementById('itemCount').textContent = itemCount;
+      document.getElementById('subtotal').textContent = `R$ ${subtotal.toFixed(2).replace('.',',')}`;
+      document.getElementById('shipping').textContent = 'Grátis';
+      document.getElementById('total').textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
+
+      if (desconto > 0) {
+        document.getElementById('discountRow').style.display = 'flex';
+        document.getElementById('discount').textContent = `- R$ ${desconto.toFixed(2).replace('.',',')}`;
+      } else {
+        document.getElementById('discountRow').style.display = 'none';
+      }
+    }
+
+    // ==========================================
+    // APLICAR CUPOM
+    // ==========================================
+    document.getElementById('applyCoupon').addEventListener('click', () => {
+      const codigo = document.getElementById('couponInput').value.trim().toUpperCase();
+      
+      if (!codigo) {
+        alert('Digite um código de cupom');
+        return;
+      }
+
+      if (cuponsValidos[codigo]) {
+        cupomAplicado = cuponsValidos[codigo];
+        document.getElementById('couponCode').textContent = codigo;
+        document.getElementById('couponApplied').style.display = 'flex';
+        document.getElementById('couponInput').value = '';
+        document.getElementById('couponInput').disabled = true;
+        document.getElementById('applyCoupon').disabled = true;
+        updateSummary();
+        
+        if (storage.showToast) {
+          storage.showToast(`✓ Cupom ${codigo} aplicado!`, 'success');
+        }
+      } else {
+        if (storage.showToast) {
+          storage.showToast('Cupom inválido', 'error');
+        } else {
+          alert('Cupom inválido');
+        }
+      }
+    });
+
+    // ==========================================
+    // REMOVER CUPOM
+    // ==========================================
+    document.getElementById('removeCoupon').addEventListener('click', () => {
+      cupomAplicado = null;
+      document.getElementById('couponApplied').style.display = 'none';
+      document.getElementById('couponInput').disabled = false;
+      document.getElementById('applyCoupon').disabled = false;
+      updateSummary();
+    });
+
+    // ==========================================
+    // FINALIZAR COMPRA
+    // ==========================================
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+      const cart = storage.getCart();
+      
+      if (cart.length === 0) {
+        alert('Seu carrinho está vazio');
+        return;
+      }
+      
+      if (cupomAplicado) {
+        localStorage.setItem('appliedCoupon', JSON.stringify(cupomAplicado));
+      } else {
+        localStorage.removeItem('appliedCoupon');
+      }
+      
+      location.href = 'checkout.html';
+    });
+
+    // ==========================================
+    // INICIALIZAÇÃO
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', async () => {
+      console.log('🎬 Inicializando carrinho...');
+      
+      if (typeof storage !== 'undefined') {
+        await renderCart();
+      } else {
+        setTimeout(async () => {
+          if (typeof storage !== 'undefined') {
+            await renderCart();
+          }
+        }, 1000);
+      }
+    });
+
+    // Expor globalmente
+    window.updateQty = updateQty;
+    window.removeItem = removeItem;
+    window.renderCart = renderCart;
+  </script>
+</body>
+</html>

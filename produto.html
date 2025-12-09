@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produto - NovaModa</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0b0b;
+      color: #fff;
+      padding-top: 80px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 40px;
+    }
+
+    /* Galeria */
+    .gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .main-img {
+      width: 100%;
+      height: 500px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .main-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .main-img:hover img {
+      transform: scale(1.05);
+    }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .thumb {
+      height: 100px;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .thumb:hover { border-color: #14d0d6; }
+    .thumb.active { border-color: #14d0d6; }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Info */
+    .product-info {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .badge {
+      background: #14d0d6;
+      color: #000;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      width: fit-content;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      line-height: 1.2;
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fbbf24;
+    }
+
+    .price {
+      font-size: 2.5rem;
+      color: #14d0d6;
+      font-weight: 800;
+    }
+
+    .old-price {
+      font-size: 1.2rem;
+      color: #666;
+      text-decoration: line-through;
+      margin-left: 15px;
+    }
+
+    .description {
+      color: #aaa;
+      line-height: 1.6;
+    }
+
+    /* Opções */
+    .option-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-label {
+      font-size: 14px;
+      color: #888;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .option-btn {
+      padding: 12px 20px;
+      background: #111;
+      border: 2px solid #333;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .option-btn:hover {
+      border-color: #666;
+    }
+
+    .option-btn.active {
+      border-color: #14d0d6;
+      background: rgba(20, 208, 214, 0.1);
+      color: #14d0d6;
+    }
+
+    /* Quantidade */
+    .qty-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .qty-control {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: #111;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+
+    .qty-btn {
+      background: transparent;
+      border: none;
+      color: #14d0d6;
+      font-size: 22px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .qty-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .qty-value {
+      font-size: 18px;
+      font-weight: 700;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    /* Botões */
+    .actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background: #14d0d6;
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(20, 208, 214, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: #000;
+    }
+
+    .btn-secondary:hover {
+      background: #f0f0f0;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 100px 20px;
+      color: #14d0d6;
+      font-size: 1.2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      .product-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      h1 { font-size: 1.8rem; }
+      .price { font-size: 2rem; }
+      .actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo-area" onclick="location.href='index.html'">
+        <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" class="logo" alt="NovaModa">
+        <span class="brand">NovaModa</span>
+      </div>
+      
+      <div class="right-area">
+        <a class="btn entrar-btn" href="login.html">Entrar</a>
+        <div class="icons">
+          <span class="icon" onclick="location.href='favoritos.html'">♥</span>
+          <span class="icon" onclick="location.href='carrinho.html'">🛒<span class="cart-count">0</span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="loading" id="loadingState">⏳ Carregando produto...</div>
+    
+    <div class="product-grid" id="productGrid" style="display:none;">
+      <!-- Galeria -->
+      <div class="gallery">
+        <div class="main-img">
+          <img id="mainImage" src="" alt="Produto">
+        </div>
+        <div class="thumbs" id="thumbsContainer"></div>
+      </div>
+
+      <!-- Info -->
+      <div class="product-info">
+        <span class="badge" id="productBadge">NOVO</span>
+        
+        <h1 id="productName">Produto</h1>
+        
+        <div class="rating" id="productRating">
+          <span>★★★★★</span>
+          <span style="color: #888;">(0 avaliações)</span>
+        </div>
+
+        <div>
+          <span class="price" id="productPrice">R$ 0,00</span>
+          <span class="old-price" id="productOldPrice">R$ 0,00</span>
+        </div>
+
+        <p class="description" id="productDescription"></p>
+
+        <!-- Tamanho -->
+        <div class="option-group">
+          <div class="option-label">Tamanho</div>
+          <div class="options" id="sizeOptions">
+            <button class="option-btn active" onclick="selectOption(this, 'size')">M</button>
+          </div>
+        </div>
+
+        <!-- Cor -->
+        <div class="option-group">
+          <div class="option-label">Cor</div>
+          <div class="options" id="colorOptions">
+            <button class="option-btn active" onclick="selectOption(this, 'color')">Preto</button>
+          </div>
+        </div>
+
+        <!-- Quantidade -->
+        <div class="qty-section">
+          <div class="option-label">Quantidade</div>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="updateQty(-1)">−</button>
+            <span class="qty-value" id="qty">1</span>
+            <button class="qty-btn" onclick="updateQty(1)">+</button>
+          </div>
+          <span id="stockStatus" style="color: #4ade80; font-size: 14px;">✓ Em estoque</span>
+        </div>
+
+        <!-- Botões -->
+        <div class="actions">
+          <button class="btn btn-primary" id="addToCartBtn" onclick="addToCart()">
+            🛒 Adicionar ao Carrinho
+          </button>
+          <button class="btn btn-secondary" onclick="buyNow()">
+            Comprar Agora
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Definir API_BASE globalmente
+    window.API_BASE = window.API_BASE || (window.location.origin + '/Novamoda/api');
+  </script>
+  
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    /**
+     * PRODUTO - BUSCA DA API (CORRIGIDO)
+     */
+    
+    let qty = 1;
+    let currentProduct = null;
+
+    // ==========================================
+    // CARREGAR PRODUTO DA API
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = parseInt(urlParams.get('id'));
+
+      if (!productId) {
+        alert('ID do produto não especificado!');
+        window.location.href = 'categorias.html';
+        return;
+      }
+
+      await carregarProduto(productId);
+      
+      // Atualizar contador do carrinho
+      if (typeof storage !== 'undefined' && storage.updateCartCount) {
+        storage.updateCartCount();
+      }
+    });
+
+    async function carregarProduto(id) {
+      const loading = document.getElementById('loadingState');
+      const grid = document.getElementById('productGrid');
+
+      loading.style.display = 'block';
+      grid.style.display = 'none';
+
+      try {
+        console.log('🔗 Buscando produto:', `${API_BASE}/produtos/detalhes.php?id=${id}`);
+
+        const response = await fetch(`${API_BASE}/produtos/detalhes.php?id=${id}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        console.log('📦 Produto recebido:', data);
+
+        if (!data.success || !data.data) {
+          throw new Error(data.message || 'Produto não encontrado');
+        }
+
+        currentProduct = data.data;
+        renderizarProduto(currentProduct);
+
+        loading.style.display = 'none';
+        grid.style.display = 'grid';
+
+      } catch (error) {
+        console.error('❌ Erro ao carregar produto:', error);
+        loading.innerHTML = `
+          <div style="text-align:center;color:#ff3b30;">
+            <div style="font-size:4rem;margin-bottom:20px;">❌</div>
+            <h3>Produto não encontrado</h3>
+            <p style="color:#888;margin:15px 0;">${error.message}</p>
+            <button class="btn btn-primary" onclick="location.href='categorias.html'" style="padding:12px 24px;margin-top:20px;">
+              Ver Todos os Produtos
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function renderizarProduto(produto) {
+      // Nome e título
+      document.getElementById('productName').textContent = produto.nome;
+      document.title = `${produto.nome} - NovaModa`;
+      
+      // Badge
+      const badgeEl = document.getElementById('productBadge');
+      if (produto.preco_antigo) {
+        badgeEl.textContent = 'PROMOÇÃO';
+        badgeEl.style.display = 'inline-block';
+      } else if (produto.estoque === 0) {
+        badgeEl.textContent = 'ESGOTADO';
+        badgeEl.style.background = '#ff3b30';
+        badgeEl.style.display = 'inline-block';
+      } else {
+        badgeEl.style.display = 'none';
+      }
+
+      // Preço
+      document.getElementById('productPrice').textContent = `R$ ${parseFloat(produto.preco).toFixed(2).replace('.', ',')}`;
+      
+      const oldPriceEl = document.getElementById('productOldPrice');
+      if (produto.preco_antigo) {
+        oldPriceEl.textContent = `R$ ${parseFloat(produto.preco_antigo).toFixed(2).replace('.', ',')}`;
+        oldPriceEl.style.display = 'inline';
+      } else {
+        oldPriceEl.style.display = 'none';
+      }
+
+      // Avaliações (mock)
+      document.getElementById('productRating').innerHTML = `
+        <span>★★★★★</span>
+        <span style="color: #888;">(${Math.floor(Math.random() * 300) + 50} avaliações)</span>
+      `;
+
+      // Descrição
+      document.getElementById('productDescription').textContent = produto.descricao || 'Produto de alta qualidade.';
+
+      // Estoque
+      const stockEl = document.getElementById('stockStatus');
+      const addBtn = document.getElementById('addToCartBtn');
+      
+      if (produto.estoque === 0) {
+        stockEl.innerHTML = '✗ Esgotado';
+        stockEl.style.color = '#ff3b30';
+        addBtn.disabled = true;
+        addBtn.textContent = 'Produto Esgotado';
+      } else if (produto.estoque <= 10) {
+        stockEl.innerHTML = `⚠️ Últimas ${produto.estoque} unidades`;
+        stockEl.style.color = '#fbbf24';
+      } else {
+        stockEl.innerHTML = `✓ ${produto.estoque} em estoque`;
+        stockEl.style.color = '#4ade80';
+      }
+
+      // Galeria (usar apenas imagem principal, pois a API não retorna múltiplas imagens)
+      const imagens = [
+        produto.imagem_principal,
+        produto.imagem_principal, // Duplicar para simular galeria
+        produto.imagem_principal,
+        produto.imagem_principal
+      ];
+
+      document.getElementById('mainImage').src = produto.imagem_principal;
+      document.getElementById('mainImage').onerror = function() {
+        this.src = 'https://via.placeholder.com/800x800/14d0d6/000?text=' + encodeURIComponent(produto.nome);
+      };
+      
+      const thumbsContainer = document.getElementById('thumbsContainer');
+      thumbsContainer.innerHTML = imagens.map((img, index) => `
+        <div class="thumb ${index === 0 ? 'active' : ''}" onclick="changeImage(this, '${img}')">
+          <img src="${img}" alt="Thumb ${index + 1}" onerror="this.src='https://via.placeholder.com/200'">
+        </div>
+      `).join('');
+
+      // Tamanhos (mock)
+      const tamanhos = ['P', 'M', 'G', 'GG'];
+      const sizesContainer = document.getElementById('sizeOptions');
+      sizesContainer.innerHTML = tamanhos.map((size, i) => `
+        <button class="option-btn ${i === 1 ? 'active' : ''}" onclick="selectOption(this, 'size')">${size}</button>
+      `).join('');
+
+      // Cores (mock)
+      const cores = ['Preto', 'Branco', 'Cinza'];
+      const colorsContainer = document.getElementById('colorOptions');
+      colorsContainer.innerHTML = cores.map((color, i) => `
+        <button class="option-btn ${i === 0 ? 'active' : ''}" onclick="selectOption(this, 'color')">${color}</button>
+      `).join('');
+    }
+
+    // ==========================================
+    // FUNÇÕES DE INTERAÇÃO
+    // ==========================================
+    function changeImage(thumb, src) {
+      document.getElementById('mainImage').src = src;
+      document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    }
+
+    function selectOption(btn, type) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function updateQty(delta) {
+      const maxQty = currentProduct?.estoque || 999;
+      qty = Math.max(1, Math.min(qty + delta, maxQty));
+      document.getElementById('qty').textContent = qty;
+    }
+
+    function showToast(message, type = 'success') {
+      if (window.storage && typeof window.storage.showToast === 'function') {
+        window.storage.showToast(message, type);
+      } else {
+        alert(message);
+      }
+    }
+
+    // ==========================================
+    // ADICIONAR AO CARRINHO
+    // ==========================================
+    async function addToCart() {
+      if (!currentProduct || currentProduct.estoque === 0) {
+        showToast('❌ Produto esgotado', 'error');
+        return;
+      }
+
+      // Verificar se storage está disponível
+      if (typeof storage === 'undefined' || !storage.addToCart) {
+        console.error('Storage não carregado');
+        showToast('❌ Erro: Sistema não carregado', 'error');
+        return;
+      }
+
+      const size = document.querySelector('#sizeOptions .active')?.textContent || 'M';
+      const color = document.querySelector('#colorOptions .active')?.textContent || 'Preto';
+      
+      // Criar objeto do produto para adicionar
+      const productToAdd = {
+        id: currentProduct.id,
+        name: currentProduct.nome,
+        price: parseFloat(currentProduct.preco),
+        img: currentProduct.imagem_principal,
+        size: size,
+        color: color
+      };
+
+      console.log('🛒 Adicionando ao carrinho:', productToAdd);
+
+      // Usar o método addToCart do storage
+      const success = await storage.addToCart(productToAdd, qty);
+      
+      if (success) {
+        showToast(`✓ ${qty}x ${currentProduct.nome} adicionado! (${size}, ${color})`, 'success');
+        
+        // Resetar quantidade
+        qty = 1;
+        document.getElementById('qty').textContent = qty;
+      } else {
+        showToast('❌ Erro ao adicionar produto', 'error');
+      }
+    }
+
+    function buyNow() {
+      addToCart();
+      setTimeout(() => {
+        window.location.href = 'carrinho.html';
+      }, 800);
+    }
+
+    // Expor funções globalmente
+    window.changeImage = changeImage;
+    window.selectOption = selectOption;
+    window.updateQty = updateQty;
+    window.addToCart = addToCart;
+    window.buyNow = buyNow;
+  </script>
+</body>
+</html>

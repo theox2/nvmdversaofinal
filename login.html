@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - NovaModa</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .animated-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(20, 208, 214, 0.15), transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.15), transparent 50%);
+      animation: bgPulse 8s ease-in-out infinite;
+    }
+
+    @keyframes bgPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.8; }
+    }
+
+    .login-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 450px;
+      margin: 20px;
+    }
+
+    .login-card {
+      background: rgba(17, 17, 17, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(20, 208, 214, 0.2);
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-login {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #14d0d6, #0ea5e9);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      box-shadow: 0 10px 30px rgba(20, 208, 214, 0.3);
+    }
+
+    .login-title {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #14d0d6, #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .login-subtitle {
+      color: #888;
+      font-size: 15px;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      color: #888;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(11, 11, 11, 0.8);
+      border: 2px solid rgba(51, 51, 51, 0.5);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: #14d0d6;
+      background: rgba(11, 11, 11, 0.95);
+      box-shadow: 0 0 0 4px rgba(20, 208, 214, 0.1);
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #14d0d6;
+    }
+
+    .checkbox-group label {
+      color: #aaa;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .forgot-password {
+      color: #14d0d6;
+      font-size: 14px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .forgot-password:hover {
+      opacity: 0.8;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #14d0d6, #0ea5e9);
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 20px rgba(20, 208, 214, 0.3);
+      margin-top: 10px;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(20, 208, 214, 0.4);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 30px 0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(102, 102, 102, 0.3);
+    }
+
+    .social-login {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .social-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px;
+      background: rgba(11, 11, 11, 0.8);
+      border: 1px solid rgba(51, 51, 51, 0.5);
+      border-radius: 12px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .social-btn:hover {
+      background: rgba(17, 17, 17, 0.95);
+      border-color: #14d0d6;
+      transform: translateY(-2px);
+    }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #888;
+      font-size: 14px;
+    }
+
+    .login-footer a {
+      color: #14d0d6;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-footer a:hover {
+      opacity: 0.8;
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: rgba(17, 17, 17, 0.95);
+      border: 1px solid rgba(20, 208, 214, 0.2);
+      border-radius: 12px;
+      color: #14d0d6;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .back-btn:hover {
+      background: rgba(20, 208, 214, 0.1);
+      transform: translateX(-5px);
+    }
+
+    @media (max-width: 520px) {
+      .login-card {
+        padding: 32px 24px;
+      }
+      .login-title {
+        font-size: 1.6rem;
+      }
+      .social-login {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="animated-bg"></div>
+
+  <a href="index.html" class="back-btn">
+    <span>←</span>
+    <span>Voltar ao site</span>
+  </a>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="logo-login">🛒</div>
+        <h1 class="login-title">Bem-vindo de volta!</h1>
+        <p class="login-subtitle">Entre na sua conta NovaModa</p>
+      </div>
+
+      <form class="login-form" id="loginForm" name="login">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input 
+            type="email" 
+            class="form-input" 
+            name="email"
+            id="loginEmail" 
+            placeholder="seu@email.com"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <input 
+            type="password" 
+            class="form-input"
+            name="password" 
+            id="loginPassword" 
+            placeholder="••••••••"
+            required>
+        </div>
+
+        <div class="form-options">
+          <div class="checkbox-group">
+            <input type="checkbox" id="rememberMe">
+            <label for="rememberMe">Lembrar-me</label>
+          </div>
+          <a href="#" class="forgot-password">Esqueci a senha</a>
+        </div>
+
+        <button type="submit" class="btn-login" id="submitBtn">Entrar</button>
+      </form>
+
+      <div class="divider">ou continue com</div>
+
+      <div class="social-login">
+        <button type="button" class="social-btn" onclick="alert('Login com Google em breve')">
+          <span>🔵</span>
+          <span>Google</span>
+        </button>
+        <button type="button" class="social-btn" onclick="alert('Login com Facebook em breve')">
+          <span>📘</span>
+          <span>Facebook</span>
+        </button>
+      </div>
+
+      <div class="login-footer">
+        Não tem uma conta? <a href="signup.html">Criar conta</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORDEM CORRETA: API_BASE → storage → auth -->
+  <script>
+    // Definir API_BASE globalmente ANTES de carregar os outros scripts
+    window.API_BASE = window.location.origin + '/Novamoda/api';
+    console.log('🔗 API_BASE configurado:', window.API_BASE);
+  </script>
+  
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    // ✅ O auth.js já gerencia o formulário automaticamente!
+    // Não precisa de código adicional aqui
+    
+    console.log('✅ Página de login carregada');
+    console.log('🔐 Auth system:', window.auth ? 'Carregado' : 'Erro');
+    console.log('💾 Storage system:', window.storage ? 'Carregado' : 'Erro');
+  </script>
+</body>
+</html>

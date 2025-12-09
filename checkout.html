@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Finalizar Pedido – NovaModa</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .container-checkout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 120px 20px 60px;
+    }
+
+    .checkout-steps {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .step.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(20, 208, 214, 0.1);
+    }
+
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 40px;
+    }
+
+    .checkout-section {
+      background: #111;
+      border-radius: 12px;
+      padding: 30px;
+      border: 1px solid #222;
+      margin-bottom: 25px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-size: 14px;
+      color: #888;
+      font-weight: 600;
+    }
+
+    .form-input {
+      padding: 14px;
+      background: #0b0b0b;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 15px;
+      transition: border-color .2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 18px;
+      background: #0b0b0b;
+      border: 2px solid #333;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .payment-option.active {
+      border-color: var(--accent);
+      background: rgba(20, 208, 214, 0.05);
+    }
+
+    .order-summary {
+      background: #111;
+      border-radius: 12px;
+      padding: 30px;
+      border: 1px solid #222;
+      position: sticky;
+      top: 120px;
+      height: fit-content;
+    }
+
+    .place-order-btn {
+      width: 100%;
+      padding: 18px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all .2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 20px;
+    }
+
+    .place-order-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(20, 208, 214, 0.4);
+    }
+
+    .success-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .success-modal.show {
+      display: flex;
+    }
+
+    .success-content {
+      background: #111;
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 50px;
+      text-align: center;
+      max-width: 500px;
+    }
+
+    @media(max-width: 968px) {
+      .checkout-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader"><div class="spinner"></div></div>
+
+  <header class="header">
+    <div class="header-container">
+      <div class="logo-area" onclick="location.href='index.html'">
+        <img src="Yellow_Black_Brush_Streetwear_Brand_Logo-removebg-preview.png" class="logo" alt="NovaModa">
+        <span class="brand">NovaModa</span>
+      </div>
+      <div class="right-area">
+        <div class="icons">
+          <span class="icon" onclick="location.href='carrinho.html'">🛒<span class="cart-count">0</span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-checkout">
+    <h1 style="font-size:2.5rem;color:#fff;margin-bottom:40px;">🔒 Finalizar Pedido</h1>
+
+    <div class="checkout-steps">
+      <div class="step active">
+        <span>1</span>
+        <span>Dados</span>
+      </div>
+      <div class="step">
+        <span>2</span>
+        <span>Entrega</span>
+      </div>
+      <div class="step">
+        <span>3</span>
+        <span>Pagamento</span>
+      </div>
+    </div>
+
+    <div class="checkout-layout">
+      <div>
+        <!-- Dados Pessoais -->
+        <div class="checkout-section">
+          <h2 style="font-size:1.5rem;margin-bottom:20px;">👤 Dados Pessoais</h2>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label">Nome Completo *</label>
+              <input type="text" class="form-input" id="fullName" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">CPF *</label>
+              <input type="text" class="form-input" id="cpf" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telefone *</label>
+              <input type="tel" class="form-input" id="phone" required>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">E-mail *</label>
+              <input type="email" class="form-input" id="email" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="checkout-section">
+          <h2 style="font-size:1.5rem;margin-bottom:20px;">📦 Endereço de Entrega</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">CEP *</label>
+              <input type="text" class="form-input" id="cep" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estado *</label>
+              <input type="text" class="form-input" id="state" required>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Cidade *</label>
+              <input type="text" class="form-input" id="city" required>
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Endereço *</label>
+              <input type="text" class="form-input" id="address" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Número *</label>
+              <input type="text" class="form-input" id="number" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Complemento</label>
+              <input type="text" class="form-input" id="complement">
+            </div>
+            <div class="form-group full">
+              <label class="form-label">Bairro *</label>
+              <input type="text" class="form-input" id="neighborhood" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagamento -->
+        <div class="checkout-section">
+          <h2 style="font-size:1.5rem;margin-bottom:20px;">💳 Forma de Pagamento</h2>
+          <div style="display:flex;flex-direction:column;gap:15px;">
+            <div class="payment-option active" data-method="pix">
+              <div style="width:20px;height:20px;border-radius:50%;border:2px solid #555;"></div>
+              <div style="font-size:24px;">📱</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;color:#fff;">PIX</div>
+                <div style="font-size:13px;color:#888;">Aprovação instantânea</div>
+              </div>
+            </div>
+            <div class="payment-option" data-method="credit">
+              <div style="width:20px;height:20px;border-radius:50%;border:2px solid #555;"></div>
+              <div style="font-size:24px;">💳</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;color:#fff;">Cartão de Crédito</div>
+                <div style="font-size:13px;color:#888;">Parcelamento em até 12x</div>
+              </div>
+            </div>
+            <div class="payment-option" data-method="boleto">
+              <div style="width:20px;height:20px;border-radius:50%;border:2px solid #555;"></div>
+              <div style="font-size:24px;">📄</div>
+              <div style="flex:1;">
+                <div style="font-weight:700;color:#fff;">Boleto Bancário</div>
+                <div style="font-size:13px;color:#888;">Vencimento em 3 dias úteis</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumo -->
+      <div>
+        <div class="order-summary">
+          <h2 style="font-size:1.3rem;margin-bottom:20px;">📋 Resumo do Pedido</h2>
+          
+          <div id="summaryItems" style="margin-bottom:20px;max-height:300px;overflow-y:auto;">
+            <!-- Items via JS -->
+          </div>
+
+          <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #222;">
+            <span style="color:#aaa;">Subtotal</span>
+            <span style="color:#fff;font-weight:600;" id="summarySubtotal">R$ 0,00</span>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #222;">
+            <span style="color:#aaa;">Frete</span>
+            <span style="color:#fff;font-weight:600;">Grátis</span>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;font-size:24px;font-weight:800;margin-top:20px;padding-top:20px;border-top:2px solid #333;">
+            <span style="color:#fff;">Total</span>
+            <span style="color:var(--accent);" id="summaryTotal">R$ 0,00</span>
+          </div>
+
+          <button class="place-order-btn" id="placeOrderBtn">
+            Finalizar Pedido
+          </button>
+
+          <div style="text-align:center;color:#888;font-size:13px;margin-top:15px;">
+            🔒 Pagamento 100% seguro
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Success Modal -->
+  <div class="success-modal" id="successModal">
+    <div class="success-content">
+      <div style="font-size:80px;margin-bottom:20px;">✅</div>
+      <h2 style="font-size:2rem;color:#fff;margin-bottom:15px;">Pedido Realizado!</h2>
+      <p style="color:#aaa;margin-bottom:30px;">
+        Seu pedido foi confirmado com sucesso!<br>
+        Em breve você receberá um e-mail com os detalhes.
+      </p>
+      <div style="background:rgba(20,208,214,0.1);border:1px solid var(--accent);padding:15px;border-radius:8px;margin-bottom:30px;">
+        Número do pedido: <strong style="color:var(--accent);font-size:1.2rem;" id="orderNumber">#0000</strong>
+      </div>
+      <a href="index.html" class="btn primary" style="width:100%;padding:15px;display:block;text-align:center;text-decoration:none">
+        Voltar para Home
+      </a>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    let selectedPaymentMethod = 'pix';
+
+    // Renderizar resumo
+    function renderSummary() {
+      if (typeof storage === 'undefined') {
+        alert('❌ Erro: Sistema não carregado. Recarregue a página.');
+        return;
+      }
+
+      const cart = storage.getCart();
+      const summaryItems = document.getElementById('summaryItems');
+      
+      if (cart.length === 0) {
+        alert('⚠️ Seu carrinho está vazio!');
+        window.location.href = 'carrinho.html';
+        return;
+      }
+
+      summaryItems.innerHTML = cart.map(item => `
+        <div style="display:flex;gap:15px;padding:15px 0;border-bottom:1px solid #222;">
+          <img src="${item.img}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;">
+          <div style="flex:1;">
+            <div style="font-weight:600;color:#fff;font-size:14px;margin-bottom:4px;">${item.name}</div>
+            <div style="font-size:12px;color:#888;">Qtd: ${item.qty}x</div>
+            <div style="color:var(--accent);font-weight:700;">R$ ${(item.price * item.qty).toFixed(2).replace('.',',')}</div>
+          </div>
+        </div>
+      `).join('');
+
+      const total = storage.getCartTotal();
+      document.getElementById('summarySubtotal').textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
+      document.getElementById('summaryTotal').textContent = `R$ ${total.toFixed(2).replace('.',',')}`;
+    }
+
+    // Seleção de pagamento
+    document.querySelectorAll('.payment-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('active'));
+        option.classList.add('active');
+        selectedPaymentMethod = option.dataset.method;
+      });
+    });
+
+    // Máscaras
+    document.getElementById('cpf').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length <= 11) {
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        e.target.value = value;
+      }
+    });
+
+    document.getElementById('phone').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length <= 11) {
+        value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        e.target.value = value;
+      }
+    });
+
+    document.getElementById('cep').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length <= 8) {
+        value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+        e.target.value = value;
+      }
+    });
+
+    // Finalizar pedido
+    document.getElementById('placeOrderBtn').addEventListener('click', () => {
+      if (typeof storage === 'undefined') {
+        alert('❌ Erro: Sistema não carregado');
+        return;
+      }
+
+      const orderData = {
+        fullName: document.getElementById('fullName').value.trim(),
+        cpf: document.getElementById('cpf').value.trim(),
+        phone: document.getElementById('phone').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        cep: document.getElementById('cep').value.trim(),
+        state: document.getElementById('state').value.trim(),
+        city: document.getElementById('city').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        number: document.getElementById('number').value.trim(),
+        complement: document.getElementById('complement').value.trim(),
+        neighborhood: document.getElementById('neighborhood').value.trim(),
+        payment: selectedPaymentMethod
+      };
+
+      // Validação
+      if (!orderData.fullName || !orderData.cpf || !orderData.phone || !orderData.email || 
+          !orderData.cep || !orderData.state || !orderData.city || !orderData.address || 
+          !orderData.number || !orderData.neighborhood) {
+        alert('⚠️ Por favor, preencha todos os campos obrigatórios (*)');
+        return;
+      }
+
+      if (!orderData.email.includes('@')) {
+        alert('⚠️ Digite um e-mail válido');
+        return;
+      }
+
+      // Salvar pedido
+      const order = storage.saveOrder(orderData);
+      
+      if (order) {
+        document.getElementById('orderNumber').textContent = order.number;
+        document.getElementById('successModal').classList.add('show');
+      } else {
+        alert('❌ Erro ao processar pedido. Tente novamente.');
+      }
+    });
+
+    // Atualizar contador do carrinho
+    function updateCartCount() {
+      if (typeof storage !== 'undefined') {
+        storage.updateCartCount();
+      }
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        if (typeof storage !== 'undefined') {
+          renderSummary();
+          updateCartCount();
+        } else {
+          alert('❌ Erro ao carregar sistema. Recarregue a página.');
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaModa - Moda Urbana Premium</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* === ANIMAÇÕES AVANÇADAS === */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(20, 208, 214, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(20, 208, 214, 0.6); }
+    }
+
+    @keyframes slide-in-right {
+      from { opacity: 0; transform: translateX(100px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slide-in-left {
+      from { opacity: 0; transform: translateX(-100px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* === HERO MELHORADO === */
+    .hero {
+      min-height: 85vh;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(20, 208, 214, 0.15), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(14, 165, 233, 0.15), transparent 40%),
+        linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(20,208,214,0.05)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+      animation: grid-move 20s linear infinite;
+    }
+
+    @keyframes grid-move {
+      0% { background-position: 0 0; }
+      100% { background-position: 60px 60px; }
+    }
+
+    .hero-card {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* === CONTADOR ANIMADO === */
+    .stats-section {
+      background: linear-gradient(135deg, #111 0%, #0a0a0a 100%);
+      padding: 60px 20px;
+      margin: 80px 0;
+      border-top: 1px solid rgba(20, 208, 214, 0.1);
+      border-bottom: 1px solid rgba(20, 208, 214, 0.1);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 30px;
+      background: rgba(20, 208, 214, 0.05);
+      border-radius: 16px;
+      border: 1px solid rgba(20, 208, 214, 0.1);
+      transition: all 0.3s;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-10px);
+      background: rgba(20, 208, 214, 0.1);
+      border-color: rgba(20, 208, 214, 0.3);
+      animation: pulse-glow 2s infinite;
+    }
+
+    .stat-number {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #14d0d6, #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      color: #888;
+      font-size: 1rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* === NOVA SEÇÃO: COLEÇÃO DESTAQUE === */
+    .featured-collection {
+      padding: 100px 20px;
+      background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+      position: relative;
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .featured-image {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .featured-image img {
+      width: 100%;
+      height: 600px;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .featured-image:hover img {
+      transform: scale(1.1) rotate(2deg);
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: #14d0d6;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 1px;
+      box-shadow: 0 8px 20px rgba(20, 208, 214, 0.4);
+    }
+
+    .featured-content h2 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .featured-content h2 span {
+      background: linear-gradient(135deg, #14d0d6, #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .featured-list {
+      list-style: none;
+      padding: 0;
+      margin: 30px 0;
+    }
+
+    .featured-list li {
+      padding: 15px 0;
+      border-bottom: 1px solid #222;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: #ccc;
+      font-size: 1.1rem;
+    }
+
+    .featured-list li::before {
+      content: '✓';
+      color: #14d0d6;
+      font-weight: 800;
+      font-size: 1.5rem;
+    }
+
+    /* === NOVA SEÇÃO: INSTAGRAM FEED === */
+    .instagram-section {
+      padding: 80px 20px;
+      background: #0a0a0a;
+    }
+
+    .instagram-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      max-width: 1200px;
+      margin: 40px auto 0;
+    }
+
+    .insta-post {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .insta-post:hover {
+      transform: scale(1.05);
+      z-index: 2;
+    }
+
+    .insta-post img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .insta-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(20, 208, 214, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      gap: 20px;
+      color: #000;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .insta-post:hover .insta-overlay {
+      opacity: 1;
+    }
+
+    /* === NEWSLETTER PREMIUM === */
+    .newsletter-section {
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #14d0d6 0%, #0ea5e9 100%);
+      color: #000;
+      text-align: center;
+    }
+
+    .newsletter-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .newsletter-section p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      opacity: 0.8;
+    }
+
+    .newsletter-form-premium {
+      display: flex;
+      max-width: 500px;
+      margin: 0 auto;
+      gap: 10px;
+    }
+
+    .newsletter-form-premium input {
+      flex: 1;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      background: rgba(0, 0, 0, 0.1);
+      color: #000;
+    }
+
+    .newsletter-form-premium input::placeholder {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    .newsletter-form-premium button {
+      padding: 16px 40px;
+      background: #000;
+      color: #14d0d6;
+      border: none;
+      border-radius: 50px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .newsletter-form-premium button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* === MARCAS PARCEIRAS === */
+    .brands-section {
+      padding: 60px 20px;
+      background: #111;
+      text-align: center;
+    }
+
+    .brands-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 60px;
+      max-width: 1000px;
+      margin: 40px auto 0;
+      flex-wrap: wrap;
+      opacity: 0.4;
+    }
+
+    .brand-logo {
+      font-size: 2.5rem;
+      transition: all 0.3s;
+      cursor: pointer;
+      filter: grayscale(100%);
+    }
+
+    .brand-logo:hover {
+      filter: grayscale(0%);
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 968px) {
+      .featured-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .featured-content h2 {
+        font-size: 2rem;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+      }
+
+      .newsletter-form-premium {
+        flex-direction: column;
+      }
+
+      .instagram-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .instagram-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Promo Bar -->
+  <div class="promo-bar">
+    🔥 <strong>BLACK FRIDAY</strong> - ATÉ 70% OFF + FRETE GRÁTIS ACIMA DE R$ 200 🔥
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo-area" onclick="location.href='index.html'">
+        <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Logo" class="logo">
+        <span class="brand">NovaModa</span>
+      </div>
+
+      <nav class="nav-desktop">
+        <div class="nav-item">
+          <a href="index.html" class="nav-link">Home</a>
+        </div>
+        <div class="nav-item">
+          <a href="categorias.html" class="nav-link">Categorias</a>
+        </div>
+        <div class="nav-item">
+          <a href="sobre.html" class="nav-link">Sobre</a>
+        </div>
+        <div class="nav-item">
+          <a href="contato.html" class="nav-link">Contato</a>
+        </div>
+      </nav>
+
+      <div class="right-area">
+        <div class="search-wrapper">
+          <input type="text" id="headerSearch" placeholder="Buscar produtos...">
+          <button id="searchBtn">🔍</button>
+          <div id="smartSearchResults" class="smart-search-results"></div>
+        </div>
+        <a href="login.html" class="btn entrar-btn">Entrar</a>
+        <div class="icons">
+          <span class="icon" onclick="location.href='favoritos.html'" title="Favoritos">♥</span>
+          <span class="icon" onclick="location.href='carrinho.html'" title="Carrinho">
+            🛒
+            <span class="cart-count">0</span>
+          </span>
+        </div>
+        <button id="menuBtnMobile" style="background:transparent;border:none;color:#14d0d6;font-size:1.5rem;cursor:pointer;display:none;">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="mobile-menu"></div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container" style="display:flex;align-items:center;gap:60px;position:relative;z-index:1;flex-wrap:wrap;">
+      <div class="promo-left" style="flex:1;min-width:300px;">
+        <div class="eyebrow">NOVA COLEÇÃO 2024</div>
+        <h1>Vista o <span>Futuro</span> da Moda</h1>
+        <p class="lead">
+          Descubra peças exclusivas que combinam estilo urbano, conforto premium e sustentabilidade. Sua identidade começa aqui.
+        </p>
+        <div class="hero-actions">
+          <a href="categorias.html" class="btn primary">Explorar Coleção</a>
+          <a href="#featured" class="btn ghost">Ver Lançamentos</a>
+        </div>
+      </div>
+      <div class="promo-right" style="flex:1;display:flex;justify-content:center;min-width:300px;">
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&h=1000&fit=crop" alt="Moda Urbana">
+          <div class="hero-card-tag">🔥 70% OFF</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-number" data-count="50000">0</div>
+          <div class="stat-label">Clientes Satisfeitos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" data-count="500">0</div>
+          <div class="stat-label">Produtos Exclusivos</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">4.9<span style="font-size:1.5rem;">★</span></div>
+          <div class="stat-label">Avaliação Média</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number" data-count="98">0</div>
+          <div class="stat-label">% Recomendação</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categorias -->
+  <section class="section dark">
+    <div class="container">
+      <h2 class="section-title">Categorias em Destaque</h2>
+      <div class="grid-categorias">
+        <a href="categorias.html?cat=masculino" class="cat-img">
+          <img src="https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=600&h=800&fit=crop" alt="Masculino">
+          <span>Masculino</span>
+        </a>
+        <a href="categorias.html?cat=feminino" class="cat-img">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&h=800&fit=crop" alt="Feminino">
+          <span>Feminino</span>
+        </a>
+        <a href="categorias.html?cat=acessorios" class="cat-img">
+          <img src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600&h=800&fit=crop" alt="Acessórios">
+          <span>Acessórios</span>
+        </a>
+        <a href="categorias.html?cat=calcados" class="cat-img">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=800&fit=crop" alt="Calçados">
+          <span>Calçados</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Produtos -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Produtos em Alta</h2>
+      <div class="produtos-grid" id="produtosGrid">
+        <!-- Preenchido via JS -->
+      </div>
+      <div style="text-align:center;margin-top:40px;">
+        <a href="categorias.html" class="btn primary">Ver Todos os Produtos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Collection -->
+  <section id="featured" class="featured-collection">
+    <div class="featured-grid">
+      <div class="featured-image">
+        <img src="https://images.unsplash.com/photo-1558769132-cb1aea1f5aed?w=800&h=1000&fit=crop" alt="Coleção Urban">
+        <div class="featured-badge">NOVO</div>
+      </div>
+      <div class="featured-content">
+        <h2>Coleção <span>Urban Street</span></h2>
+        <p style="color:#888;font-size:1.1rem;line-height:1.8;">
+          Inspirada nas ruas de Tokyo e Nova York, nossa nova coleção traz o melhor do streetwear contemporâneo com qualidade premium.
+        </p>
+        <ul class="featured-list">
+          <li>Tecidos sustentáveis e alta durabilidade</li>
+          <li>Design exclusivo e edição limitada</li>
+          <li>Caimento perfeito e conforto máximo</li>
+          <li>Entrega expressa em todo Brasil</li>
+        </ul>
+        <a href="categorias.html" class="btn primary" style="padding:16px 40px;font-size:1.1rem;">Descobrir Agora</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Instagram -->
+  <section class="instagram-section">
+    <div class="container">
+      <h2 class="section-title" style="text-align:center;font-size:2.5rem;">
+        Marque <span style="color:#14d0d6;">@novamoda</span> nas suas fotos
+      </h2>
+      <p style="text-align:center;color:#888;font-size:1.1rem;margin-top:10px;">
+        Compartilhe seu estilo e apareça aqui!
+      </p>
+      <div class="instagram-grid">
+        <div class="insta-post">
+          <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&h=400&fit=crop" alt="Instagram">
+          <div class="insta-overlay">
+            <span>❤️ 1.2k</span>
+            <span>💬 89</span>
+          </div>
+        </div>
+        <div class="insta-post">
+          <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop" alt="Instagram">
+          <div class="insta-overlay">
+            <span>❤️ 2.4k</span>
+            <span>💬 156</span>
+          </div>
+        </div>
+        <div class="insta-post">
+          <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&h=400&fit=crop" alt="Instagram">
+          <div class="insta-overlay">
+            <span>❤️ 3.1k</span>
+            <span>💬 203</span>
+          </div>
+        </div>
+        <div class="insta-post">
+          <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop" alt="Instagram">
+          <div class="insta-overlay">
+            <span>❤️ 1.8k</span>
+            <span>💬 127</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="newsletter-section">
+    <div class="container">
+      <h2>Fique por Dentro das Novidades</h2>
+      <p>Receba ofertas exclusivas, lançamentos e dicas de estilo direto no seu email</p>
+      <form class="newsletter-form-premium" id="newsletterForm">
+        <input type="email" id="newsletterEmail" placeholder="Digite seu melhor email" required>
+        <button type="submit">Inscrever-se</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Brands -->
+  <section class="brands-section">
+    <div class="container">
+      <h3 style="color:#666;font-size:0.9rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:20px;">
+        Marcas Parceiras
+      </h3>
+      <div class="brands-grid">
+        <div class="brand-logo">🔷</div>
+        <div class="brand-logo">⚡</div>
+        <div class="brand-logo">🌟</div>
+        <div class="brand-logo">💎</div>
+        <div class="brand-logo">🔥</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col">
+            <div class="footer-logo">
+              <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" style="width:40px;height:40px;">
+              <h4>NovaModa</h4>
+            </div>
+            <p class="footer-desc">
+              Moda urbana premium com design exclusivo e qualidade internacional. Vista o futuro.
+            </p>
+            <div class="footer-social">
+              <a href="#" title="Instagram">📷</a>
+              <a href="#" title="Facebook">📘</a>
+              <a href="#" title="Twitter">🐦</a>
+              <a href="#" title="YouTube">📺</a>
+            </div>
+          </div>
+
+          <div class="footer-col">
+            <h4>Comprar</h4>
+            <ul>
+              <li><a href="categorias.html?cat=masculino">Masculino</a></li>
+              <li><a href="categorias.html?cat=feminino">Feminino</a></li>
+              <li><a href="categorias.html?cat=acessorios">Acessórios</a></li>
+              <li><a href="categorias.html?cat=calcados">Calçados</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Ajuda</h4>
+            <ul>
+              <li><a href="#">Rastreamento</a></li>
+              <li><a href="#">Trocas e Devoluções</a></li>
+              <li><a href="#">Dúvidas Frequentes</a></li>
+              <li><a href="#">Fale Conosco</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Newsletter</h4>
+            <p style="color:#888;font-size:14px;margin-bottom:15px;">
+              Receba ofertas exclusivas
+            </p>
+            <div class="newsletter-form">
+              <input type="email" placeholder="Seu email">
+              <button class="btn primary">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-middle">
+      <div class="container">
+        <div class="payment-methods">
+          <span style="color:#888;font-size:14px;">Formas de Pagamento:</span>
+          <div class="payment-icons">
+            <span>💳</span>
+            <span>📱</span>
+            <span>🏦</span>
+          </div>
+        </div>
+        <div class="security-badges">
+          <span>🔒 Compra Segura</span>
+          <span>✓ SSL Certificado</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <p class="footer-copyright">
+          © 2024 NovaModa. Todos os direitos reservados.
+        </p>
+        <div class="footer-links">
+          <a href="#">Termos de Uso</a>
+          <a href="#">Política de Privacidade</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Contador animado
+    function animateCounter(element) {
+      const target = parseInt(element.getAttribute('data-count'));
+      if (!target) return;
+      
+      let current = 0;
+      const increment = target / 50;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          element.textContent = target.toLocaleString('pt-BR');
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(current).toLocaleString('pt-BR');
+        }
+      }, 30);
+    }
+
+    // Observer para animar quando entrar na tela
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.stat-number[data-count]').forEach(el => {
+      observer.observe(el);
+    });
+  });
+</script>
+</body>
+</html>

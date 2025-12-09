@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurações - NovaModa Admin</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { display: flex; margin: 0; background: #0a0a0a; font-family: 'Inter', sans-serif; }
+
+    .sidebar {
+      width: 260px;
+      background: #111;
+      height: 100vh;
+      position: fixed;
+      border-right: 1px solid #222;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #14d0d6;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #222;
+    }
+
+    .menu-item {
+      padding: 12px 16px;
+      margin: 8px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #aaa;
+      text-decoration: none;
+    }
+
+    .menu-item:hover, .menu-item.active {
+      background: rgba(20, 208, 214, 0.1);
+      color: #14d0d6;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 { font-size: 2rem; margin: 0; color: #fff; }
+
+    .settings-grid {
+      display: grid;
+      gap: 25px;
+    }
+
+    .settings-card {
+      background: #111;
+      border-radius: 12px;
+      padding: 30px;
+      border: 1px solid #222;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #222;
+    }
+
+    .card-icon {
+      font-size: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 0;
+      color: #fff;
+    }
+
+    .card-desc {
+      color: #888;
+      font-size: 14px;
+      margin: 5px 0 0 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      font-size: 14px;
+      color: #888;
+      font-weight: 600;
+    }
+
+    .form-input, .form-select {
+      padding: 12px;
+      background: #0b0b0b;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: #14d0d6;
+    }
+
+    .toggle-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #222;
+    }
+
+    .toggle-group:last-child {
+      border-bottom: none;
+    }
+
+    .toggle-info {
+      flex: 1;
+    }
+
+    .toggle-title {
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .toggle-desc {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      cursor: pointer;
+    }
+
+    .toggle-switch input {
+      display: none;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #333;
+      border-radius: 13px;
+      transition: 0.3s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: #14d0d6;
+    }
+
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(24px);
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+      font-size: 15px;
+    }
+
+    .btn-primary {
+      background: #14d0d6;
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(20, 208, 214, 0.4);
+    }
+
+    .btn-secondary {
+      background: #222;
+      color: #aaa;
+    }
+
+    .btn-danger {
+      background: rgba(255, 59, 48, 0.2);
+      color: #ff3b30;
+      border: 1px solid #ff3b30;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+      padding-top: 25px;
+      border-top: 1px solid #222;
+    }
+
+    .success-message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #14d0d6;
+      color: #000;
+      padding: 16px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      z-index: 9999;
+      display: none;
+      animation: slideIn 0.3s ease;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(400px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @media(max-width: 968px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">⚙️ NovaModa Admin</div>
+    <a href="admin.html" class="menu-item">
+      <span>📊</span> Dashboard
+    </a>
+    <a href="admin-pedidos.html" class="menu-item">
+      <span>📦</span> Pedidos
+    </a>
+    <a href="admin-produtos.html" class="menu-item">
+      <span>👕</span> Produtos
+    </a>
+    <a href="admin-clientes.html" class="menu-item">
+      <span>👥</span> Clientes
+    </a>
+    <a href="admin-relatorios.html" class="menu-item">
+      <span>📈</span> Relatórios
+    </a>
+    <a href="admin-configuração.html" class="menu-item active">
+      <span>⚙️</span> Configurações
+    </a>
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #222;">
+      <a href="index.html" class="menu-item">
+        <span>🏠</span> Voltar ao Site
+      </a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="header">
+      <h1>⚙️ Configurações do Sistema</h1>
+    </div>
+
+    <div class="settings-grid">
+      <!-- Informações da Loja -->
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-icon">🏪</span>
+          <div>
+            <h2 class="card-title">Informações da Loja</h2>
+            <p class="card-desc">Configure dados básicos da sua loja</p>
+          </div>
+        </div>
+
+        <form id="storeForm">
+          <div class="form-grid">
+            <div class="form-group full">
+              <label class="form-label">Nome da Loja</label>
+              <input type="text" class="form-input" id="storeName" value="NovaModa">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email de Contato</label>
+              <input type="email" class="form-input" id="storeEmail" value="contato@novamoda.com">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Telefone</label>
+              <input type="tel" class="form-input" id="storePhone" value="(11) 99999-9999">
+            </div>
+
+            <div class="form-group full">
+              <label class="form-label">Endereço</label>
+              <input type="text" class="form-input" id="storeAddress" value="Rua das Flores, 123 - São Paulo, SP">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">CNPJ</label>
+              <input type="text" class="form-input" id="storeCNPJ" value="00.000.000/0000-00">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Moeda</label>
+              <select class="form-select" id="storeCurrency">
+                <option value="BRL">Real (R$)</option>
+                <option value="USD">Dólar ($)</option>
+                <option value="EUR">Euro (€)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            <button type="button" class="btn btn-secondary" onclick="location.reload()">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Configurações de E-mail -->
+      <div class="settings-card">
+        <div class="card-header">
+          <span class="card-icon">📧</span>
+          <div>
+            <h2 class="card-title">Notificações por Email</h2>
+            <p class="card-desc">Configure quando e como receber notificações</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <div class="toggle-title">Novos Pedidos</div>
+              <div class="toggle-desc">Receber email quando um novo pedido for realizado</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="emailNewOrders" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <div class="toggle-title">Estoque Baixo</div>
+              <div class="toggle-desc">Alertas quando produtos atingirem estoque mínimo</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="emailLowStock" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <div class="toggle-title">Novos Clientes</div>
+              <div class="toggle-desc">Notificar sobre novos cadastros</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="emailNewCustomers">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-group">
+            <div class="toggle-info">
+              <div class="toggle-title">Relatórios Semanais</div>
+              <div class="toggle-desc">Receber resumo de vendas toda segunda-feira</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="emailWeeklyReport" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="button-group">
+            <button class="btn btn-primary" onclick="saveEmailSettings()">Salvar Preferências</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zona de Perigo -->
+      <div class="settings-card" style="border-color: #ff3b30;">
+        <div class="card-header">
+          <span class="card-icon">⚠️</span>
+          <div>
+            <h2 class="card-title" style="color: #ff3b30;">Zona de Perigo</h2>
+            <p class="card-desc">Ações irreversíveis - use com cuidado</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="form-group">
+            <label class="form-label">Limpar Dados do Banco</label>
+            <button class="btn btn-danger" onclick="clearOrders()" style="width: 100%;">
+              Limpar Todos os Pedidos
+            </button>
+          </div>
+
+          <div class="form-group">
+            <button class="btn btn-danger" onclick="clearProducts()" style="width: 100%;">
+              Limpar Todos os Produtos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="success-message" id="successMessage">
+    ✓ Configurações salvas com sucesso!
+  </div>
+
+  <script>
+    window.API_BASE = window.location.origin + '/Novamoda/api';
+  </script>
+  
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    // ==========================================
+    // SALVAR CONFIGURAÇÕES NO BANCO
+    // ==========================================
+    
+    // Nota: Para salvar configurações no banco, você precisaria criar
+    // uma tabela "configuracoes" e endpoints na API
+    
+    document.getElementById('storeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const storeData = {
+        name: document.getElementById('storeName').value,
+        email: document.getElementById('storeEmail').value,
+        phone: document.getElementById('storePhone').value,
+        address: document.getElementById('storeAddress').value,
+        cnpj: document.getElementById('storeCNPJ').value,
+        currency: document.getElementById('storeCurrency').value
+      };
+
+      // TODO: Implementar endpoint /api/admin/configuracoes/salvar.php
+      console.log('Salvar configurações:', storeData);
+      
+      showSuccess();
+    });
+
+    async function saveEmailSettings() {
+      const emailConfig = {
+        newOrders: document.getElementById('emailNewOrders').checked,
+        lowStock: document.getElementById('emailLowStock').checked,
+        newCustomers: document.getElementById('emailNewCustomers').checked,
+        weeklyReport: document.getElementById('emailWeeklyReport').checked
+      };
+
+      // TODO: Implementar endpoint /api/admin/configuracoes/email.php
+      console.log('Salvar preferências de email:', emailConfig);
+      
+      showSuccess();
+    }
+
+    async function clearOrders() {
+      if (!confirm('⚠️ ATENÇÃO: Isso vai apagar TODOS os pedidos do banco! Confirmar?')) {
+        return;
+      }
+
+      try {
+        // TODO: Implementar endpoint /api/admin/limpar/pedidos.php
+        const response = await fetch(`${API_BASE}/admin/limpar/pedidos.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('✅ Todos os pedidos foram removidos do banco.');
+          location.reload();
+        } else {
+          alert('❌ Erro: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('❌ Erro ao limpar pedidos');
+      }
+    }
+
+    async function clearProducts() {
+      if (!confirm('⚠️ ATENÇÃO: Isso vai apagar TODOS os produtos do banco! Confirmar?')) {
+        return;
+      }
+
+      try {
+        // TODO: Implementar endpoint /api/admin/limpar/produtos.php
+        const response = await fetch(`${API_BASE}/admin/limpar/produtos.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert('✅ Todos os produtos foram removidos do banco.');
+          location.reload();
+        } else {
+          alert('❌ Erro: ' + data.message);
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('❌ Erro ao limpar produtos');
+      }
+    }
+
+    function showSuccess() {
+      const msg = document.getElementById('successMessage');
+      msg.classList.add('show');
+      setTimeout(() => {
+        msg.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
